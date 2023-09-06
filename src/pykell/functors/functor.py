@@ -1,27 +1,27 @@
-from typing import Generic, TypeVar
-from pykell.typing.types import Function
-
-__functors__ = []
-
-A = TypeVar("A")
-B = TypeVar("B")
-C = TypeVar("C")
-D = TypeVar("D")
+__all__ = [
+    "Functor",
+    "fmap",
+]
+from pykell.functions.function import F
 
 
-class Functor(Generic[A, B, C, D]):
-    def __init__(self, fmap: Function[Function[A, B], Function[C, D]]):
-        self.fmap = fmap
+class Functor: 
+    __functors__ = {}
 
-    def __call__(self, f: Function[A, B]) -> Function[C, D]:
-        return self.fmap(f)
+    def __init__(self, f_type: type):
+        self.__functors__[f_type] = self
 
-    def __enter__(self):
-        global __functors__
+    def fmap(self, f, x):
+        return self._fmap(f, x)
 
-        __functors__.append(self)
+    def __call__(self, fmap):
+        self._fmap = fmap
 
-    def __exit__(self, *_):
-        global __functors__
+@F
+def fmap(f, x):
+    for f_type, functor in Functor.__functors__.items():
+        if isinstance(x, f_type):
+            res = functor.fmap(f, x)
+            return res
+    raise Exception("Functor not defined for type {type(x)}")
 
-        __functors__.pop()

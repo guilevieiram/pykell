@@ -1,12 +1,13 @@
 __all__ = ["MaybeMonad"]
 
-from typing import Generic, TypeVar, Callable
+from typing import TypeVar, Callable
 
 from pykell.monads.abstract import Monad
 from pykell.typing.containers import Maybe, Just, Nothing
 
 T = TypeVar("T")
 U = TypeVar("U")
+
 
 class MaybeMonad(Monad[Maybe[T]]):
     @staticmethod
@@ -20,6 +21,7 @@ class MaybeMonad(Monad[Maybe[T]]):
         assert isinstance(val, Just)
         return f(val.value)
 
+
 if __name__ == "__main__":
 
     def f(x: int) -> Maybe[float]:
@@ -27,7 +29,6 @@ if __name__ == "__main__":
             return Just(x + 10)
         else:
             return Nothing()
-
 
     def h(x: int) -> Maybe[float]:
         if x < 10:
@@ -42,5 +43,3 @@ if __name__ == "__main__":
         return y
 
     print(result(3))
-
-

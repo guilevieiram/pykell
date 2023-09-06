@@ -1,4 +1,14 @@
-__all__ = ["Maybe", "Result", "Unit", "Just", "Error", "Nothing"]
+__all__ = [
+    "Maybe",
+    "Result",
+    "Unit",
+    "Just",
+    "Error",
+    "Nothing",
+    "Either",
+    "Left",
+    "Right",
+]
 
 from typing import Generic, TypeVar
 
@@ -54,3 +64,29 @@ class Error(Result, Generic[E]):
 
     def __repr__(self):
         return str(self)
+
+
+L = TypeVar("L")
+R = TypeVar("R")
+
+
+class Either(Generic[L, R]):
+    ...
+
+
+class Left(Either, Generic[L]):
+    def __init__(self, val: L):
+        self._ = val
+
+    @property
+    def value(self) -> L:
+        return self._
+
+
+class Right(Either, Generic[R]):
+    def __init__(self, val: R):
+        self._ = val
+
+    @property
+    def value(self) -> R:
+        return self._

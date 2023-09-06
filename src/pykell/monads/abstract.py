@@ -7,6 +7,7 @@ from pykell.monads.helpers import count_leading_space, proc
 
 M = TypeVar("M")
 
+
 class Monad(ABC, Generic[M]):
     @staticmethod
     @abstractmethod
