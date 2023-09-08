@@ -37,6 +37,9 @@ class FunctionRepo:
 
         return wrap
 
+    def __getitem__(self, __type: type) -> Callable:
+        return self.repository[__type]
+
     def update_callers(self, t: type, f: Callable):
         self._allowed_types.add(t)
         self._function_repo[t] = f

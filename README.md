@@ -158,26 +158,26 @@ def _(f, x): ...
 
 
 ### Monads
-This is a good one.
+This is a good one. There is support for monadic do notation.
+
 ```python
-from pykell.monads import MaybeMonad
-from pykell.functions import F
 from pykell.typing import Maybe, Just, Nothing
+from pykell.monads import do
 
 
 # define some functions we want to compose ...
-f = F[int, Maybe[int]]  (lambda x: Just(x + 10) if x < 10 else Nothing())
-g = F[int, Maybe[float]](lambda x: Just(x / 7 ) if x < 10 else Nothing())
+f = lambda x: Just(x + 10) if x < 10 else Nothing()
+g = lambda x: Just(x / 7 ) if x < 10 else Nothing()
 
 
 
-# Play inside the monadic 'do'!
-@MaybeMonad.do
+# compose them inside the do block!
+@do[Maybe]
 def calculate(x):
-    y: int = yield f(x) # yield calls with the bind. 
-                        # Think of it like the let! in f# or x <- ... in Haskell. 
+    y: int = yield f(x)     # yield calls with the bind. 
+                            # Think of it like the let! in f# or x <- ... in Haskell. 
 
-    if y < 5:           # besides the yield everything works as normal!
+    if y < 5:               # besides the yield everything works as normal!
         return y + 5
 
     z: float = yield g(z)
@@ -185,9 +185,21 @@ def calculate(x):
 
 
 
-calculate(-10)          # Just(5)
-calculate(4)            # Just(2.0)
-calculate(11)           # Nothing()
+calculate(-10)              # Just(5)
+calculate(4)                # Just(2.0)
+calculate(11)               # Nothing()
+```
+
+
+There are a couple of implementation for monadic types but feel free to do your own:
+```python
+from pykell.monads import Monad
+
+@Monad.unit.instance(MyType)    # define a unit. Same as 'return' in Haskell
+def _(x): ...
+
+@Monad.bind.instance(MyType)    # define a bind. Same as '>>=' in Haskell
+def _(x, f): ...
 ```
 
 
