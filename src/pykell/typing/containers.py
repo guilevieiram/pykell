@@ -82,6 +82,12 @@ class Left(Either, Generic[L]):
     def value(self) -> L:
         return self._
 
+    def __str__(self):
+        return f"Left {self.value}"
+
+    def __repr__(self):
+        return str(self)
+
 
 class Right(Either, Generic[R]):
     def __init__(self, val: R):
@@ -90,3 +96,9 @@ class Right(Either, Generic[R]):
     @property
     def value(self) -> R:
         return self._
+
+    def __str__(self):
+        return f"Right {self.value}"
+
+    def __repr__(self):
+        return str(self)

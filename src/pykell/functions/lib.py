@@ -49,6 +49,7 @@ def foldl(f: Function, zero, xs: List):
 def foldr(f: Function, zero, xs: List):
     return [zero := f(x)(zero) for x in xs[::-1]][-1]
 
+
 @F
 def head(xs: List):
     return xs[0]
@@ -129,6 +130,6 @@ def zip_with(f: Function, xs, ys):
     return map | f | (zip | xs | ys)
 
 
-@F 
+@F
 def sum(xs):
-    return foldr |(lambda x:lambda y: x + y) |0 |xs
+    return foldr | (lambda x: lambda y: x + y) | 0 | xs

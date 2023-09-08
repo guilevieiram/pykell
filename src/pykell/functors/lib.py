@@ -1,31 +1,24 @@
 from pykell.functions.function import F
-from pykell.typing.containers import (
-    Maybe,
-    Nothing,
-    Just,
-    Either,
-    Left,
-    Right
-)
+from pykell.typing.containers import Maybe, Nothing, Just, Either, Left, Right
 from pykell.functors.functor import Functor
 
 
-@Functor(list)
-def list_functor(f, xs): 
+@Functor.fmap.instance(list)
+def _(f, xs):
     return [f(x) for x in xs]
 
-@Functor(Maybe)
-def maybe_functor(f, mx):
-    if isinstance(mx, Nothing): return Nothing()
-    return Just(f(mx.value))
+
+@Functor.fmap.instance(Maybe)
+def _(f, mx):
+    return Nothing() if isinstance(mx, Nothing) else Just(f(mx.value))
 
 
-@Functor(Either)
-def either_functor(f, ex):
-    if isinstance(ex, Left): return Left(f(ex.value))
-    return Right(f(ex.value))
+@Functor.fmap.instance(Either)
+def _(f, ex):
+    res = f(ex.value)
+    return Left(res) if isinstance(ex, Left) else Right(res)
 
-@Functor(F)
+
+@Functor.fmap.instance(F)
 def f_functor(f, g):
     return f >> g
-
