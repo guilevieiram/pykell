@@ -105,16 +105,39 @@ def f(x: int) -> Maybe[int]:
 
 ```
 
+### TypeClasses
+This is a very core concept in Haskell that we are able to simulate in this library.
+It allows us to use Functors, Applicatives and Monads very easily!
+
+Check out the example on how we define Functors with these typeclasses:
+
+```haskell 
+-- haskell
+class Functor f where
+    fmap :: (a -> b) -> f a -> f b
+
+instance Functor List where
+    fmap g x = map g x
+```
+
+```python
+# pykell
+@typeclass
+class Functor(Generic[f]):
+    @where
+    def fmap(g, x: f) -> f: ...
+
+@Functor.fmap.instance(list)
+def _(g, x): return map |g |x
+```
 ### Functors
 This is some syntatic sugar to use functors in python.
 
 ```python
-from pykell.functions import F
 from pykell.functors import fmap
 from pykell.typing import Maybe, Just
 
-
-f = F[int, int](lambda x: 2 * x + 3)
+f = lambda x: 2 * x + 3
 
 
 fmap |f |Just(5)    # Just 13
@@ -127,14 +150,8 @@ You can define your own as well, just like in haskell
 ```python
 from pykell.functors import Functor
 
-@Functor(MyType)
-def fmap(f, x):
-    ... 
-```
-
-```haskell
-instance Functor MyType where
-    fmap f x = ...
+@Functor.fmap.instance(MyType)
+def _(f, x): ...
 ```
 
 
