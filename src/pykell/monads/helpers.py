@@ -1,3 +1,4 @@
+__all__ = ["convert"]
 import inspect
 import ast
 
@@ -75,11 +76,17 @@ class ReplaceMonadic(ast.NodeTransformer):
 
 class RelplaceReturns(ast.NodeTransformer):
     def visit_Return(self, node):
-        return ast.Return(
-            value=ast.Call(
-                func=ast.Name("unit", ctx=ast.Load()), args=[node.value], keywords=[]
+        if isinstance(node.value, ast.UnaryOp) and isinstance(
+            node.value.op, ast.Invert
+        ):
+            return ast.Return(
+                value=ast.Call(
+                    func=ast.Name("unit", ctx=ast.Load()),
+                    args=[node.value.operand],
+                    keywords=[],
+                )
             )
-        )
+        return node
 
 
 def convert(func, bind, unit):

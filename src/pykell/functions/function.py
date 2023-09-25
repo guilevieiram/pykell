@@ -63,8 +63,7 @@ class F(Generic[A, B]):
         return self.__repr__()
 
     def __repr__(self):
-        a, b = self.__orig_class__.__args__  # type: ignore
-        return f"Function: {a.__name__} -> {b.__name__}"
+        return f"Function"
 
     def __rshift__(self, g: "F[B, C]") -> "F[A, C]":
         return F(lambda _: g.f(self.f(_)))

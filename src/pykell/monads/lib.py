@@ -1,5 +1,4 @@
 from pykell.monads.monad import Monad
-
 from pykell.typing.containers import Maybe, Just, Nothing
 
 

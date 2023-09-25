@@ -4,7 +4,7 @@ __all__ = [
 ]
 
 from typing import TypeVar, Generic
-from pykell.typeclasses.typeclass import typeclass, where
+from pykell.typeclasses.typeclasses import typeclass, where
 from pykell.functions.function import F
 
 f = TypeVar("f")

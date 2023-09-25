@@ -160,6 +160,10 @@ def _(f, x): ...
 ### Monads
 This is a good one. There is support for monadic do notation.
 
+In this notation, `yield` and `return~` indicate you are doing a monadic computation.
+
+The rest is just pure python!
+
 ```python
 from pykell.typing import Maybe, Just, Nothing
 from pykell.monads import do
@@ -175,13 +179,15 @@ g = lambda x: Just(x / 7 ) if x < 10 else Nothing()
 @do[Maybe]
 def calculate(x):
     y: int = yield f(x)     # yield calls with the bind. 
-                            # Think of it like the let! in f# or x <- ... in Haskell. 
+                            # Like the let! in F# or x <- ... in Haskell. 
 
     if y < 5:               # besides the yield everything works as normal!
-        return y + 5
+        return Nothing()    # Normal return
 
     z: float = yield g(z)
-    return z - 1.5
+
+    return~ z               # Monadic return with the '~'
+                            # Like the return! in F# or return ... in Haskell.
 
 
 
