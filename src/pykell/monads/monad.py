@@ -1,7 +1,8 @@
-__all__ = ["Monad", "do"]
+__all__ = ["Monad", "do", "bi"]
 from typing import Generic, TypeVar
 from pykell.typeclasses.typeclasses import typeclass, where
 from pykell.monads.helpers import convert
+from pykell.operators.infix import infix
 
 
 M = TypeVar("M")
@@ -24,3 +25,6 @@ class Do:
 
 
 do = Do()
+
+
+bi = infix(lambda x, f: Monad.bind(x, f))

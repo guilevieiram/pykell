@@ -8,13 +8,20 @@
     Here we provide an adaptation of functors via Typeclasses.
 """
 
-from pykell.functors import fmap
 
 # You can use the default implementation for a couple of types
+from pykell.functors import fmap
 from pykell.typing import Just
 
-new_list = fmap | (lambda x: x * 2) | [1, 2, 3]  # [2, 4, 6]
-new_just = fmap | (lambda x: x + 5) | Just(2)  # Just 7
+new_list = fmap | (lambda x: x * 2) | [1, 2, 3] # [2, 4, 6]
+new_just = fmap | (lambda x: x + 5) | Just(2)   # Just 7
+
+
+# Or use the provided infix 
+from pykell.functors import fm
+
+new_list = (lambda x: x * 2) <<fm>> [1, 2, 3]   # [2, 4, 6]
+new_just = (lambda x: x + 5) <<fm>> Just(2)     # Just 7
 
 
 # For newly defined types you can provide an implementation

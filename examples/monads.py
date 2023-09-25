@@ -34,6 +34,21 @@ z = compute(30)  # Output "x is to small"
 # Nothing
 
 
+
+# If you want raw binds as infix operators you can
+# also do that! (>>=) but less pretty
+
+from pykell.monads import bi
+
+def f(x: int):
+    if x < 10:
+        return Nothing()
+    return Just(x + 5)
+
+result = Just(5 ) <<bi>> f  # Nothing
+result = Just(50) <<bi>> f  # Just: 55
+
+
 # Defining your own monads via typeclasses
 from pykell.monads import Monad
 

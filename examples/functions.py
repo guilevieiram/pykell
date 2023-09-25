@@ -40,13 +40,13 @@ z = sum_four | 1  # 5
 
 
 # Composition of functions
-h = f << g  # equivalent of f∘g = h : x -> y -> 2 * x + y
+h = f < g  # equivalent of f∘g = h : x -> y -> 2 * x + y
 # or the regular "." composition in haskell
 w = h | 2 | 4  # 8
 
 
 # Alternative notation
-sum_four_then_double = sum_four >> g
+sum_four_then_double = sum_four > g
 fourteen = sum_four_then_double | 3
 
 

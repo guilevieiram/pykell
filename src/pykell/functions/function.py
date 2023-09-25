@@ -65,8 +65,8 @@ class F(Generic[A, B]):
     def __repr__(self):
         return f"Function"
 
-    def __rshift__(self, g: "F[B, C]") -> "F[A, C]":
+    def __gt__(self, g: "F[B, C]") -> "F[A, C]":
         return F(lambda _: g.f(self.f(_)))
 
-    def __lshift__(self, g: "F[C, A]") -> "F[C, B]":
+    def __lt__(self, g: "F[C, A]") -> "F[C, B]":
         return F(lambda _: self.f(g.f(_)))

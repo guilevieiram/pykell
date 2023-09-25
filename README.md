@@ -15,16 +15,16 @@ f = filter (\x -> x / 3 < 10)
 
 g = (\x -> x - 2) . (\x -> x ^ 3)
 
-x = fmap g Just 5                   -- Just 27
+x = fmap g (Just 5)                 -- Just 123
 
 ```
 
 ```python
 f = filter |(lambda x: x / 3 < 10)  
 
-g = F(lambda x: x - 2) >> F(lambda x: x ** 3)
+g = F(lambda x: x - 2) < F(lambda x: x ** 3)
 
-x = fmap |g |Just(5)                # Just 27
+x = fmap |g |Just(5)                # Just 123
 ```
 
 ## Installing
@@ -63,7 +63,7 @@ my_float = f2 |1.5
 
 
 # Composition
-h = f2 >> g     # this will return f2 ∘ g
+h = f2 < g      # this will return f2 ∘ g
 h | 1.2         # This is a float: 3.2
 
 
@@ -102,8 +102,34 @@ from pykell.typing import Maybe, Just, Nothing
 
 def f(x: int) -> Maybe[int]:
     return Just(x + 10) if x < 10 else Nothing()
-
 ```
+
+### Operators
+Infix operators make the life of a Haskell programmer much easier and the 
+code much more expressive. 
+
+We provide here an API for that that can be used anywhere.
+
+By convention, since python does not consider `$` or `*` as valid function names,
+we keep infix operators with short (2 chars) names.
+
+```python
+from pykell.operators import infix
+
+sm = infix(lambda x, y: x + y)
+
+x = 5 <<sm>> 6                  # 11
+
+
+def call_and_print(f, x):
+    print("Calling!")
+    return f(x)
+cp = infix(call_and_print)
+
+y = (lambda x: x * 3) <<cp>> 5  # 15
+# Output: Calling
+```
+
 
 ### TypeClasses
 This is a very core concept in Haskell that we are able to simulate in this library.
@@ -114,7 +140,7 @@ Check out the example on how we define Functors with these typeclasses:
 ```haskell 
 -- haskell
 class Functor f where
-    fmap :: (a -> b) -> f a -> f b
+    fmap :: (a -> b) -> f a - f b
 
 instance Functor List where
     fmap g x = map g x
@@ -132,16 +158,16 @@ def _(g, x): return map |g |x
 ```
 ### Functors
 This is some syntatic sugar to use functors in python.
+(infix notation included!)
 
 ```python
-from pykell.functors import fmap
+from pykell.functors import fmap, fm
 from pykell.typing import Maybe, Just
 
 f = lambda x: 2 * x + 3
 
 
-fmap |f |Just(5)    # Just 13
-
+f <<fm>> Just(5)    # Just 13
 
 fmap |f |[1, 2, 3]  # [5, 7, 9]
 ```
@@ -154,7 +180,23 @@ from pykell.functors import Functor
 def _(f, x): ...
 ```
 
+### Applicatives
+Applicatives are all over the place in Haskell programming.
+We provide an infix api to use them here:
 
+```python
+from pykell.functions import F
+from pykell.typing import Just
+from pykell.functors import fm
+from pykell.applicative import ap
+
+mul = F(lambda x, y: x * y)
+x = mul <<fm>> Just(2) <<ap>> Just(5)   # Just 10
+```
+
+```Haskell
+let x = (*) <$> Just 2 <*> Just 5       -- Just 10
+```
 
 
 ### Monads
@@ -188,7 +230,6 @@ def calculate(x):
 
     return~ z               # Monadic return with the '~'
                             # Like the return! in F# or return ... in Haskell.
-
 
 
 calculate(-10)              # Just(5)
